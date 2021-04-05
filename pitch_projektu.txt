@@ -1,0 +1,5 @@
+• Projekt by měl být závodní hra. (Pokud se tedy zadaří :D)
+
+• Auto, silnice, zrychlení
+
+• překážky, timer
