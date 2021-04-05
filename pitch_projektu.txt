@@ -1,5 +1,8 @@
-• Projekt by měl být závodní hra. (Pokud se tedy zadaří :D)
+• shrnutí projektu jednou větou
+Projekt by měl být závodní hra. (Pokud se tedy zadaří :D)
 
+tři hlavní featury
 • Auto, silnice, zrychlení
 
+dva stretch goaly
 • překážky, timer
