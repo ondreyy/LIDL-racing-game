@@ -84,7 +84,8 @@ def gameloop():
     spusteno = True
     autoX = 440
     autoY= 480
-    rychlost = 0
+    rychlostX = 0
+    rychlostY = 0
         
     while spusteno:
         stisknuto = pygame.key.get_pressed()
@@ -105,14 +106,25 @@ def gameloop():
         #ovládání auta
         if udalost.type == pygame.KEYDOWN:
             if udalost.key == pygame.K_RIGHT:
-                rychlost = 5
+                rychlostX = 5
             if udalost.key == pygame.K_LEFT:
-                rychlost = -5
-                
+                rychlostX = -5
+            
+            if udalost.key == pygame.K_UP:
+                 rychlostY = -5
+            if udalost.key == pygame.K_DOWN:
+                 rychlostY = 5
+                 
         if udalost.type == pygame.KEYUP:
             if udalost.key == pygame.K_LEFT or udalost.key == pygame.K_RIGHT:
-                rychlost = 0
-        autoX += rychlost
+                rychlostX = 0
+                 
+        if udalost.type == pygame.KEYUP:
+            if udalost.key == pygame.K_UP or udalost.key == pygame.K_DOWN:
+                rychlostY = 0
+                
+        autoX += rychlostX
+        autoY += rychlostY
             
             
         if stisknuto[pygame.K_SPACE]:
