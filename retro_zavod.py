@@ -86,7 +86,13 @@ def gameloop():
     autoY= 480
     rychlostX = 0
     rychlostY = 0
-        
+    silnice_x1 = 100
+    silnice_x2 = 100
+    silnice_y1 = 0
+    silnice_y2 = -600
+    silnice_speed = 8
+    silnice_speed_change = 0
+    
     while spusteno:
         stisknuto = pygame.key.get_pressed()
         udalosti = pygame.event.get()
@@ -110,21 +116,21 @@ def gameloop():
             if udalost.key == pygame.K_LEFT:
                 rychlostX = -5
             
-            if udalost.key == pygame.K_UP:
-                 rychlostY = -5
-            if udalost.key == pygame.K_DOWN:
-                 rychlostY = 5
+        #    if udalost.key == pygame.K_UP:
+        #         rychlostY = -5
+        #    if udalost.key == pygame.K_DOWN:
+        #         rychlostY = 5
                  
         if udalost.type == pygame.KEYUP:
             if udalost.key == pygame.K_LEFT or udalost.key == pygame.K_RIGHT:
                 rychlostX = 0
                  
-        if udalost.type == pygame.KEYUP:
-            if udalost.key == pygame.K_UP or udalost.key == pygame.K_DOWN:
-                rychlostY = 0
+        #if udalost.type == pygame.KEYUP:
+        #    if udalost.key == pygame.K_UP or udalost.key == pygame.K_DOWN:
+        #        rychlostY = 0
                 
         autoX += rychlostX
-        autoY += rychlostY
+        #autoY += rychlostY
             
             
         if stisknuto[pygame.K_SPACE]:
@@ -132,12 +138,25 @@ def gameloop():
             autoY = 480
 
         pozadi()
+
+        okno.blit(silnice,(silnice_x1,silnice_y1))
+        okno.blit(silnice, (silnice_x2,silnice_y2))
+        
+        silnice_y1 += silnice_speed
+        silnice_y2 += silnice_speed
+
+        if silnice_y1 >= vyska_okna:
+            silnice_y1 = -600
+
+        if silnice_y2 >= vyska_okna:
+            silnice_y2 = -600
           
         if autoX > 700-sirka:
             crash(autoX, autoY)
             
         if autoX < 100:
            crash(autoX, autoY)
+           
             
 
         auto(autoX, autoY)
