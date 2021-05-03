@@ -167,8 +167,3 @@ def gameloop():
 gameloop()
 pygame.quit()
 quit()
-
-    
-    
-    
-    
