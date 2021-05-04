@@ -1,0 +1,13 @@
+V tomto cyklu jsem pracoval na pokračování hry
+- silnice se již pohybuje
+- s autem lze pohybovat, ale už jen doleva a doprava
+- při nárazu do zdi se zobrazí efekt exploze a zvuk (+ zpráva "CRASHED, která, ale byla již přidaná minule)
+
+V příštím milestonu bych chtěl
+- přidat zrychlení auta
+- překážky
+- soundtrack
+
+Se svým tempem jsem tento týden nebyl moc spokojen, ale měl jsem nějaký problémy mimo školu.
+
+
