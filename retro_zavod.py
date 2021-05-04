@@ -25,6 +25,7 @@ trava2 = pygame.transform.flip(trava2, 180, 0)
 silnice = pygame.image.load("silnicepre.png")
 
 crashfoto = pygame.image.load("crashed.png")
+crashexploze = pygame.image.load("crash.png")
 
 #ikona
 pygame.display.set_icon(fotoauta)
@@ -47,15 +48,16 @@ def auto(autoX, autoY):
     okno.blit(fotoauta, (autoX, autoY))
 
 #crash text
-def text_objekt(text,font):
-    textRender = font.render(text,True,255)
-    return textRender,textRender.get_rect()
+#def text_objekt(text,font):
+#    textRender = font.render(text,True,255)
+#    return textRender,textRender.get_rect()
+#
+#def zobrazeni_textu(text,size,autoX,autoY):
+#    font = pygame.font.Font("8-bit wonder.ttf",size)
+#    text_surface, text_rectangle = text_objekt(text,font)
+#    text_rectangle.center =(autoX,autoY)
+#    okno.blit(text_surface, text_rectangle)
 
-def zobrazeni_textu(text,size,autoX,autoY):
-    font = pygame.font.Font("8-bit wonder.ttf",size)
-    text_surface, text_rectangle = text_objekt(text,font)
-    text_rectangle.center =(autoX,autoY)
-    okno.blit(text_surface, text_rectangle)
 
 
 #def crash(autoX, autoY):
@@ -65,10 +67,27 @@ def zobrazeni_textu(text,size,autoX,autoY):
 #    time.sleep(2)
 #    gameloop()
    
-def crash(autoX, autoY):   
-    sirka_crash = 120 * 3
-    vyska_crash = 30 * 3
-    crashfoto_vetsi = pygame.transform.scale(crashfoto, (sirka_crash, vyska_crash))
+def crash(autoX, autoY):
+    
+    #exploze
+    sirka_crash = 722 // 6
+    vyska_crash = 702 // 6
+    if autoX <= 100:
+        pozice_crashX = autoX - 50
+    if autoX >= 600:
+        pozice_crashX = autoX + 10
+    crashexploze_mensi = pygame.transform.scale(crashexploze, (sirka_crash, vyska_crash))
+    crash_rect2 = crashexploze_mensi.get_rect()
+    okno.blit(crashexploze_mensi, (pozice_crashX, autoY))
+    
+    #zvuk nárazu
+    crash_zvuk = pygame.mixer.Sound("crashzvuk.mp3")
+    crash_zvuk.play()
+    
+    #text: CRASHED
+    sirka_crashed = 120 * 3
+    vyska_crashed = 30 * 3
+    crashfoto_vetsi = pygame.transform.scale(crashfoto, (sirka_crashed, vyska_crashed))
     crash_rect = crashfoto_vetsi.get_rect()
     crash_rect.center = okno.get_rect().center
     okno.blit(crashfoto_vetsi, crash_rect)
@@ -112,9 +131,9 @@ def gameloop():
         #ovládání auta
         if udalost.type == pygame.KEYDOWN:
             if udalost.key == pygame.K_RIGHT:
-                rychlostX = 5
+                rychlostX = 8
             if udalost.key == pygame.K_LEFT:
-                rychlostX = -5
+                rychlostX = -8
             
         #    if udalost.key == pygame.K_UP:
         #         rychlostY = -5
@@ -162,8 +181,13 @@ def gameloop():
         auto(autoX, autoY)
         
         pygame.display.update()
-        hodiny.tick(100)
+        hodiny.tick(60)
         
 gameloop()
 pygame.quit()
 quit()
+
+    
+    
+    
+    
