@@ -77,7 +77,6 @@ def crash(autoX, autoY):
     if autoX >= 600:
         pozice_crashX = autoX + 10
     crashexploze_mensi = pygame.transform.scale(crashexploze, (sirka_crash, vyska_crash))
-    crash_rect2 = crashexploze_mensi.get_rect()
     okno.blit(crashexploze_mensi, (pozice_crashX, autoY))
     
     #zvuk nárazu
