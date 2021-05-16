@@ -15,8 +15,13 @@ okno.fill((0,0,0))
 #čas
 hodiny = pygame.time.Clock()
 
+#soundtrack
+pygame.mixer.music.load("soundtrack.mp3")
+pygame.mixer.music.set_volume(0.4)
+
 #načíst obrázky
 fotoauta = pygame.image.load("auto.png")
+fotoauta2 = pygame.image.load("auto2.png")
 
 trava1 = pygame.image.load("trava.png")
 trava2 = pygame.image.load("trava.png")
@@ -36,7 +41,16 @@ pygame.display.set_icon(fotoauta)
 sirka = 270 // 4
 vyska = 460 // 4
 fotoauta = pygame.transform.scale(fotoauta, (sirka, vyska))
+fotoauta2 = pygame.transform.scale(fotoauta2, (sirka, vyska))
 
+def highscore(pocet):
+    font = pygame.font.Font("VCR_OSD_MONO.ttf",35)
+    text = font.render("Score:"+str(pocet),True,255)
+    okno.blit(text,(30,30))
+    
+def prekazky(prekx,preky,prekazka):
+    okno.blit(prekazka, (prekx,preky))
+    
 #pozadí
 def pozadi():
     okno.blit(silnice, (100, 0))
@@ -72,12 +86,27 @@ def crash(autoX, autoY):
     #exploze
     sirka_crash = 722 // 6
     vyska_crash = 702 // 6
-    if autoX <= 100:
+    pozice_crashX = autoX
+    prekazka_startx = random.randrange(400,700-sirka)
+    prekazka_starty = -600
+    prek_sirka = 50
+    prek_vyska = 100
+    prek_speed = 10
+    pocet = 0
+        
+    if autoX >= prekazka_startx and autoX <= prekazka_startx+prek_sirka:
         pozice_crashX = autoX - 50
-    if autoX >= 600:
+        
+    if autoX+sirka >= prekazka_startx and autoX+sirka <= prekazka_startx+prek_sirka:
         pozice_crashX = autoX + 10
+         
     crashexploze_mensi = pygame.transform.scale(crashexploze, (sirka_crash, vyska_crash))
     okno.blit(crashexploze_mensi, (pozice_crashX, autoY))
+    
+#    if autoX <= 100:
+#        pozice_crashX = autoX - 50
+#    if autoX >= 600:
+#        pozice_crashX = autoX + 10
     
     #zvuk nárazu
     crash_zvuk = pygame.mixer.Sound("crashzvuk.mp3")
@@ -101,7 +130,7 @@ def crash(autoX, autoY):
 def gameloop():
     spusteno = True
     autoX = 440
-    autoY= 480
+    autoY= 460
     rychlostX = 0
     rychlostY = 0
     silnice_x1 = 100
@@ -110,6 +139,13 @@ def gameloop():
     silnice_y2 = -600
     silnice_speed = 8
     silnice_speed_change = 0
+    pygame.mixer.music.play(-1)
+    prekazka_startx = random.randrange(400,700-sirka)
+    prekazka_starty = -600
+    prek_sirka = 50
+    prek_vyska = 100
+    prek_speed = 10
+    pocet = 0
     
     while spusteno:
         stisknuto = pygame.key.get_pressed()
@@ -175,9 +211,22 @@ def gameloop():
         if autoX < 100:
            crash(autoX, autoY)
            
-            
-
+        if autoY < prekazka_starty + prek_vyska:
+            if autoX >= prekazka_startx and autoX <= prekazka_startx+prek_sirka:
+                crash(autoX-25,autoY-vyska/2)
+                if autoX+sirka >= prekazka_startx and autoX+sirka <= prekazka_startx+prek_sirka:
+                    crash(autoX,autoY-vyska/2)        
+           
         auto(autoX, autoY)
+        prekazky(prekazka_startx,prekazka_starty,fotoauta2)
+        
+        highscore(pocet)              
+        pocet+=1
+        prekazka_starty += prek_speed
+
+        if prekazka_starty > sirka_okna:
+            prekazka_startx = random.randrange(400,700-sirka)
+            prekazka_starty = -200
         
         pygame.display.update()
         hodiny.tick(60)
