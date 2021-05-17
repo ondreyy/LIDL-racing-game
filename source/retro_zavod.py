@@ -2,7 +2,7 @@ import pygame, sys, random, time
 pygame.init()
 
 #název
-pygame.display.set_caption("RƎTRO racing")
+pygame.display.set_caption("RƎTRO RACING")
 
 #okno
 sirka_okna = 800
@@ -27,6 +27,9 @@ fotoauta5 = pygame.image.load("auto5.png") #BLACK
 fotoauta6 = pygame.image.load("auto6.png") #WHITE
 
 menufoto = pygame.image.load("RetroRacingMENU.png")
+pausefoto = pygame.image.load("PauseMenu.png")
+pausetext = pygame.image.load("Pause.png")
+pausetext2 = pygame.image.load("Pause2.png")
 
 trava1 = pygame.image.load("trava.png")
 trava2 = pygame.image.load("trava.png")
@@ -45,21 +48,25 @@ play2 = pygame.image.load("playbutton2.png")
 options2 = pygame.image.load("optionsbutton2.png")
 quit2 = pygame.image.load("quitbutton2.png")
 
+icon = pygame.image.load("icon.png")
 
 #ikona
-pygame.display.set_icon(fotoauta)
+pygame.display.set_icon(icon)
 
 # # # # # # # # # # # # # # # # 
 
 #auta
-sirka = 270 // 4
-vyska = 460 // 4
+sirka = 300 // 4
+vyska = 450 // 4
 fotoauta = pygame.transform.scale(fotoauta, (sirka, vyska))
 fotoauta2 = pygame.transform.scale(fotoauta2, (sirka, vyska))
 fotoauta3 = pygame.transform.scale(fotoauta3, (sirka, vyska))
 fotoauta4 = pygame.transform.scale(fotoauta4, (sirka, vyska))
 fotoauta5 = pygame.transform.scale(fotoauta5, (sirka, vyska))
 fotoauta6 = pygame.transform.scale(fotoauta6, (sirka, vyska))
+
+pausetext_mensi = pygame.transform.scale(pausetext, (62, 57))
+pausetext2_mensi = pygame.transform.scale(pausetext2, (62, 57))
 
 #MENU
 def mainmenu():
@@ -102,7 +109,7 @@ def mainmenu():
         if mouse[0] > 513 and mouse[0] < 711 and mouse[1] > 443 and mouse[1] < 483:
             okno.blit(options2, (510, 440))
            # if click == (True, False, False):
-           # DODĚLAT OPTIONS !!! # Fullscreen etc. #
+           # DODĚLAT OPTIONS !!! # Fullscreen etc. # + instrukce #
             
         if mouse[0] > 553 and mouse[0] < 662 and mouse[1] > 493 and mouse[1] < 533:
             okno.blit(quit2, (550, 490))
@@ -112,6 +119,21 @@ def mainmenu():
         
         
         pygame.display.update()
+
+def paused():
+    pause = True
+    while pause:
+        udalosti = pygame.event.get()
+        for udalost in udalosti:
+            if udalost.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            okno.blit(pausefoto, (0, 0))
+            pausefoto.set_alpha(128)
+            
+        pygame.display.update()
+        hodiny.tick(30)
+    
 
 def highscore(pocet):
     font = pygame.font.Font("VCR_OSD_MONO.ttf",35)
@@ -216,7 +238,7 @@ def crash(autoX, autoY):
 #game loop
 def gameloop():
     spusteno = True
-    autoX = 440
+    autoX = 435
     autoY= 460
     rychlostX = 0
     rychlostY = 0
@@ -280,7 +302,7 @@ def gameloop():
             
             
         if stisknuto[pygame.K_SPACE]:
-            autoX = 440
+            autoX = 435
             autoY = 460
 
         pozadi()
@@ -325,11 +347,25 @@ def gameloop():
             prekazka_startx = random.randrange(100,300)
             prekazka_starty = -200
         
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        
+        if mouse[0] > 725 and mouse[0] < 775 and mouse[1] > 15 and mouse[1] < 60:
+            okno.blit(pausetext2_mensi, (720, 10))
+            if click == (True, False, False):
+                paused()
+        else:
+            okno.blit(pausetext_mensi, (720, 10))
+        
+        
+        
+        
         pygame.display.update()
         hodiny.tick(60)
-        
-mainmenu()        
+
+mainmenu()
 gameloop()
+paused()
 pygame.quit()
 quit()
 
