@@ -1,4 +1,4 @@
-import pygame, sys, random, time
+import pygame, sys, random, time, os
 pygame.init()
 
 #název
@@ -9,7 +9,9 @@ sirka_okna = 800
 vyska_okna = 600
 okno = pygame.display.set_mode((sirka_okna, vyska_okna))
 
+
 okno.fill((0,0,0))
+fullscreen = False
 
 #čas
 hodiny = pygame.time.Clock()
@@ -27,9 +29,13 @@ fotoauta5 = pygame.image.load("auto5.png") #BLACK
 fotoauta6 = pygame.image.load("auto6.png") #WHITE
 
 menufoto = pygame.image.load("RetroRacingMENU.png")
-pausefoto = pygame.image.load("PauseMenu.png")
+pausefoto = pygame.image.load("PauseMenu.png").convert_alpha()
 pausetext = pygame.image.load("Pause.png")
 pausetext2 = pygame.image.load("Pause2.png")
+playfoto = pygame.image.load("Play.png")
+playfoto2 = pygame.image.load("Play2.png")
+
+#MENU PŘECHOD
 
 trava1 = pygame.image.load("trava.png")
 trava2 = pygame.image.load("trava.png")
@@ -42,16 +48,23 @@ crashexploze = pygame.image.load("crash.png")
 
 play = pygame.image.load("playbutton.png")
 options = pygame.image.load("optionsbutton.png")
-quit = pygame.image.load("quitbutton.png")
+quit1 = pygame.image.load("quitbutton.png")
+continue1 = pygame.image.load("continue.png")
+restart = pygame.image.load("restart.png")
 
 play2 = pygame.image.load("playbutton2.png")
 options2 = pygame.image.load("optionsbutton2.png")
 quit2 = pygame.image.load("quitbutton2.png")
+continue2 = pygame.image.load("continue2.png")
+restart2 = pygame.image.load("restart2.png")
+
+
 
 icon = pygame.image.load("icon.png")
 
 #ikona
 pygame.display.set_icon(icon)
+
 
 # # # # # # # # # # # # # # # # 
 
@@ -67,10 +80,13 @@ fotoauta6 = pygame.transform.scale(fotoauta6, (sirka, vyska))
 
 pausetext_mensi = pygame.transform.scale(pausetext, (62, 57))
 pausetext2_mensi = pygame.transform.scale(pausetext2, (62, 57))
+playfoto_mensi = pygame.transform.scale(playfoto, (62, 57))
+playfoto2_mensi = pygame.transform.scale(playfoto2, (62, 57))
 
 #MENU
 def mainmenu():
     menu = True
+    
     zvoleno = "start"
 
     while menu:
@@ -95,7 +111,7 @@ def mainmenu():
         
         okno.blit(play, (550, 390))
         okno.blit(options, (510, 440))
-        okno.blit(quit, (550, 490))
+        okno.blit(quit1, (550, 490))
         
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -108,7 +124,8 @@ def mainmenu():
             
         if mouse[0] > 513 and mouse[0] < 711 and mouse[1] > 443 and mouse[1] < 483:
             okno.blit(options2, (510, 440))
-           # if click == (True, False, False):
+            if click == (True, False, False):
+                optionsmenu()
            # DODĚLAT OPTIONS !!! # Fullscreen etc. # + instrukce #
             
         if mouse[0] > 553 and mouse[0] < 662 and mouse[1] > 493 and mouse[1] < 533:
@@ -119,21 +136,74 @@ def mainmenu():
         
         
         pygame.display.update()
+  
+        
+def optionsmenu():
+    options = True
+    while options:
+        udalosti = pygame.event.get()
+        for udalost in udalosti:
+            if udalost.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            okno.blit(optionsfoto, (0,0))
+            
+        pygame.display.update()
+        
+def unpaused():
+    pause = False
 
 def paused():
     pause = True
+       
+    
     while pause:
         udalosti = pygame.event.get()
         for udalost in udalosti:
             if udalost.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            okno.blit(pausefoto, (0, 0))
-            pausefoto.set_alpha(128)
+            if udalost.type == pygame.KEYDOWN:
+                if udalost.key == pygame.K_ESCAPE:
+                    pause = False
+                         
+                         
+                         
+        okno.blit(pausefoto, (0, 0))
+        okno.blit(continue1, (519, 392))
+        okno.blit(restart, (533, 438))
+        okno.blit(options, (533, 480))
+        okno.blit(quit1, (580, 525))
+        
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+             
+        if mouse[0] > 519 and mouse[0] < 744 and mouse[1] > 392 and mouse[1] < 430:
+            okno.blit(continue2, (519, 392))
+            if click == (True, False, False):
+                pause = False
             
+        if mouse[0] > 533 and mouse[0] < 728 and mouse[1] > 443 and mouse[1] < 479:
+            okno.blit(restart2, (533, 438))
+            if click == (True, False, False):
+                gameloop()
+                
+        if mouse[0] > 533 and mouse[0] < 728 and mouse[1] > 481 and mouse[1] < 518:
+            okno.blit(options2, (533, 480))
+            if click == (True, False, False):
+                optionsmenu()
+               # DODĚLAT OPTIONS !!! # Fullscreen etc. # + instrukce #             
+            
+        if mouse[0] > 580 and mouse[0] < 690 and mouse[1] > 525 and mouse[1] < 563:
+            okno.blit(quit2, (580, 525))
+            if click == (True, False, False):
+                pygame.quit()
+                sys.exit()
+            
+            
+                      
         pygame.display.update()
-        hodiny.tick(30)
-    
 
 def highscore(pocet):
     font = pygame.font.Font("VCR_OSD_MONO.ttf",35)
@@ -155,25 +225,6 @@ def pozadi():
 def auto(autoX, autoY):
     okno.blit(fotoauta, (autoX, autoY))
 
-#crash text
-#def text_objekt(text,font):
-#    textRender = font.render(text,True,255)
-#    return textRender,textRender.get_rect()
-#
-#def zobrazeni_textu(text,size,autoX,autoY):
-#    font = pygame.font.Font("8-bit wonder.ttf",size)
-#    text_surface, text_rectangle = text_objekt(text,font)
-#    text_rectangle.center =(autoX,autoY)
-#    okno.blit(text_surface, text_rectangle)
-
-
-
-#def crash(autoX, autoY):
-#    okno.blit(crashfoto, (crash_rect.center))
-#    zobrazeni_textu("CRASHED", 64, sirka_okna/2, vyska_okna/2)
-#    pygame.display.update()
-#    time.sleep(2)
-#    gameloop()
    
 def crash(autoX, autoY):
     
@@ -238,6 +289,7 @@ def crash(autoX, autoY):
 #game loop
 def gameloop():
     spusteno = True
+    pause = False
     autoX = 435
     autoY= 460
     rychlostX = 0
@@ -250,6 +302,7 @@ def gameloop():
     silnice_speed_change = 0
     #pygame.mixer.music.play(-1)
     pocet = 0
+    fullscreen = False
     
     #překážka č.1
     prekazka_startx = random.randrange(400,700-sirka)
@@ -283,6 +336,24 @@ def gameloop():
                     rychlostX = 8
                 if udalost.key == pygame.K_LEFT:
                     rychlostX = -8
+                    
+                    
+                if udalost.key == pygame.K_ESCAPE:
+                    paused()
+                    
+                if udalost.key == pygame.K_SPACE:
+                    gameloop()
+                    
+                    
+            if udalost.type == pygame.KEYDOWN:     
+                if udalost.key == pygame.K_f:
+                    fullscreen = not fullscreen
+                    if fullscreen:
+                        pygame.display.set_mode((sirka_okna, vyska_okna), pygame.FULLSCREEN)
+                    else:
+                        
+                        pygame.display.set_mode((sirka_okna, vyska_okna))
+                        
             
         #    if udalost.key == pygame.K_UP:
         #         rychlostY = -5
@@ -300,10 +371,6 @@ def gameloop():
         autoX += rychlostX
         #autoY += rychlostY
             
-            
-        if stisknuto[pygame.K_SPACE]:
-            autoX = 435
-            autoY = 460
 
         pozadi()
 
@@ -356,12 +423,12 @@ def gameloop():
                 paused()
         else:
             okno.blit(pausetext_mensi, (720, 10))
-        
-        
-        
-        
+            
+    
         pygame.display.update()
         hodiny.tick(60)
+
+         
 
 mainmenu()
 gameloop()
